@@ -14,6 +14,10 @@ if (process.argv[2] != null && process.argv[2] > 0) {
 //3. 创建服务器
 var server = express()
 
+server.get('/', function (request, response) {
+  response.send('hello world')
+})
+
 //4. 生成解析器
 // application/x-www-form-urlencoded
 // var urlencoded = bodyParse.urlencoded({ extends:true })
