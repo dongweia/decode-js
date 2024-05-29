@@ -6,6 +6,11 @@ var bodyParse = require('body-parser')
 
 const PluginSojsonV7 = require('./plugin/sojsonv7.js')
 
+let port = 9999
+if (process.argv[2] != null && process.argv[2] > 0) {
+  port = process.argv[2]
+}
+
 //3. 创建服务器
 var server = express()
 
@@ -31,6 +36,6 @@ server.post('/decode', function (request, response) {
 })
 
 //7. 绑定端口
-server.listen(9999)
+server.listen(port)
 
-console.log('node server start: http://127.0.0.1:9999')
+console.log(`node server start: http://127.0.0.1:${port}`)
