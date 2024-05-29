@@ -89,7 +89,7 @@ function decodeGlobal(ast) {
     console.error('Line 1 is not version variable!')
     return false
   }
-  console.info(`Version var: ${var_version}`)
+  // console.info(`Version var: ${var_version}`)
   decrypt_code[0] = first_line
   ast.program.body.shift()
 
@@ -233,7 +233,7 @@ function decodeGlobal(ast) {
     console.error('Cannot find decrypt variable')
     return
   }
-  console.log(`Main call wrapper name: ${decrypt_val}`)
+  // console.log(`Main call wrapper name: ${decrypt_val}`)
 
   // 运行解密语句
   let content_code = ast.program.body
@@ -275,7 +275,7 @@ function decodeGlobal(ast) {
     const code = generator(path.node, { minified: true }).code
     virtualGlobalEval(code)
     path.remove()
-    console.log(`Go to sub: ${cur_val}`)
+    // console.log(`Go to sub: ${cur_val}`)
     path.scope.path.traverse({
       CallExpression: funToStr,
       MemberExpression: memToStr,
@@ -402,7 +402,7 @@ function unpackCall(path) {
     return
   }
   // 遍历作用域进行替换 分为函数调用和字符串调用
-  console.log(`处理代码块: ${objName}`)
+  // console.log(`处理代码块: ${objName}`)
   let objUsed = {}
   function getReplaceFunc(_node) {
     if (!t.isStringLiteral(_node.property) && !t.isIdentifier(_node.property)) {
@@ -542,7 +542,7 @@ function cleanSwitchCode1(path) {
   const swithStm = body[0]
   const arrName = swithStm.discriminant.object.name
   const argName = swithStm.discriminant.property.argument.name
-  console.log(`扁平化还原: ${arrName}[${argName}]`)
+  // console.log(`扁平化还原: ${arrName}[${argName}]`)
   // 在while上面的节点寻找这两个变量
   let arr = []
   path.getAllPrevSiblings().forEach((pre_path) => {
@@ -681,7 +681,7 @@ function cleanDeadCode(ast) {
 function removeUniqueCall(path) {
   let up1 = path.parentPath
   let decorator = up1.node.callee.name
-  console.info(`Remove decorator: ${decorator}`)
+  // console.info(`Remove decorator: ${decorator}`)
   let bind1 = up1.scope.getBinding(decorator)
   bind1.path.remove()
   if (up1.key === 'callee') {
@@ -689,7 +689,7 @@ function removeUniqueCall(path) {
   } else if (up1.key === 'init') {
     let up2 = up1.parentPath
     let call = up2.node.id.name
-    console.info(`Remove call: ${call}`)
+    // console.info(`Remove call: ${call}`)
     let bind2 = up2.scope.getBinding(call)
     up2.remove()
     for (let ref of bind2.referencePaths) {
@@ -728,7 +728,7 @@ function unlockDebugger(path) {
   }
   const name = decl_path.node.id.name
   const bind = decl_path.scope.getBinding(name)
-  console.info(`Debug test and inf-loop: ${name}`)
+  // console.info(`Debug test and inf-loop: ${name}`)
   for (let ref of bind.referencePaths) {
     if (ref.findParent((path) => path.removed)) {
       continue
@@ -821,7 +821,7 @@ function unlockDomainLock(path) {
     },
   })
   if (mask & 0b11110) {
-    console.info('Find domain lock')
+    // console.info('Find domain lock')
     removeUniqueCall(rm)
   }
 }
@@ -1023,14 +1023,14 @@ module.exports = function (code) {
       delete node.extra
     },
   })
-  console.log('处理全局加密...')
+  // console.log('处理全局加密...')
   ast = decodeGlobal(ast)
   if (!ast) {
     return null
   }
-  console.log('处理代码块加密...')
+  // console.log('处理代码块加密...')
   ast = decodeCodeBlock(ast)
-  console.log('清理死代码...')
+  // console.log('清理死代码...')
   ast = cleanDeadCode(ast)
   // 刷新代码
   ast = parse(
@@ -1039,10 +1039,10 @@ module.exports = function (code) {
       jsescOption: { minimal: true },
     }).code
   )
-  console.log('提高代码可读性...')
+  // console.log('提高代码可读性...')
   purifyCode(ast)
   ast = parse(generator(ast, { comments: false }).code)
-  console.log('解除环境限制...')
+  // console.log('解除环境限制...')
   unlockEnv(ast)
   console.log('净化完成')
   code = generator(ast, {

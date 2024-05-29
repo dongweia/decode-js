@@ -23,7 +23,7 @@ module.exports = {
     if (t.isForInStatement(up2)) {
       return
     }
-    console.log(`Unused variable: ${name}`)
+    // console.log(`Unused variable: ${name}`)
     if (up1.node.declarations.length === 1) {
       up1.remove()
       up1.scope.crawl()
